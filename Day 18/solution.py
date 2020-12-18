@@ -3,27 +3,19 @@ import re
 with open('input') as f:
     input = f.readlines()
 
-def evaluate(expression, operator):
-    complete = False    
-    while not complete:
+def evaluate(expression, operator): 
+    while operator in expression:
         subs = re.findall(f'(\d+ [\{operator}] \d+)', expression)
-        if not subs:
-            complete = True
-        else:
-            for sub in subs:
-                expression = expression.replace(sub, str(eval(sub)), 1)
+        for sub in subs:
+            expression = expression.replace(sub, str(eval(sub)), 1)
 
     return expression
 
 def solve(expression):
-    complete = False    
-    while not complete:
+    while '(' in expression:
         subs = re.findall('(\([\+\* \d]+\))', expression)
-        if not subs:
-            complete = True
-        else:
-            for sub in subs:
-                expression = expression.replace(sub, solve(sub[1:-1]), 1)
+        for sub in subs:
+            expression = expression.replace(sub, solve(sub[1:-1]), 1)
 
     expression = evaluate(expression, '+')
     expression = evaluate(expression, '*')
