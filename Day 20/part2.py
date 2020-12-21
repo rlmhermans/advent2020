@@ -103,7 +103,7 @@ skip = len(composedimage[0]) - 19
 for _ in range(2):
     for _ in range(4):
         image_one_line = ''.join(composedimage)
-        monsters = len(re.findall('#[#.]{' + str(skip) + '}#([#.]{4}##){3}#[#.]{' + str(skip) + '}#([#.]{2}#){5}', image_one_line))
+        monsters = len(re.findall('(?=#[#.]{' + str(skip) + '}#([#.]{4}##){3}#[#.]{' + str(skip) + '}#([#.]{2}#){5})', image_one_line))
         if monsters > 0:
             print(image_one_line.count('#')-monsters * 15)
         composedimage = turn_right(composedimage)
