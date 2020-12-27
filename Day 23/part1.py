@@ -1,64 +1,29 @@
-# cups = [3, 8, 9, 1, 2, 5, 4, 6, 7]
-cups = [1, 5, 8, 9, 3, 7, 4, 6, 2]
-
-current = 0
-TIMES = 10000000
+MOVES = 10000000
 NROFCUPS = 1000000
-for i in range(10, NROFCUPS + 1):
-    cups.append(i)
+# MOVES = 10
+# NROFCUPS = 9
 
-for i in range(TIMES):
-    if i % 1000 == 0: print(i)
-    # print(f'-- move {i+1} --')
-    # Set the current cup
-    currentnumber = cups[current]
+# cups = [0, 2, 5, 8, 6, 4, 7, 3, 9, 1] # 389125467
+# cups = [0, 2, 5, 8, 6, 4, 7, 10, 9, 1] + list(range(11, NROFCUPS + 1)) + [3] # 389125467
+cups = [0, 5, 10, 7, 6, 8, 2, 4, 9, 3] + list(range(11, NROFCUPS + 1)) + [1] # 158937462
 
-    # Take the next three
-    next_three = []
-    next_three_idxs = []
-    for i in range(1, 4):
-        idx = (current + i) % NROFCUPS
-        next_three_idxs.append(idx)
-        next_three.append(cups[idx])
+current = 1
 
-    # cupstring = ' '.join([str(n) for n in cups])
-    # print('cups: ', cupstring.replace(
-    #     str(currentnumber), f'({str(currentnumber)})'))
-    # print('pick up: ', next_three)
-
-    # Destination is current cup number - 1
-    destination = currentnumber - 1
-
+for i in range(MOVES):
+    destination = current - 1
     if destination < 1:
-        destination = 9
+        destination = NROFCUPS
 
-    # Subtract 1 if the destination cup is among the three taken out
+    next_three = [cups[current], cups[cups[current]], cups[cups[cups[current]]]]
     while destination in next_three:
         destination -= 1
         if destination < 1:
-            destination = 9
+            destination = NROFCUPS
 
-    originaldestidx = cups.index(destination)
-    # print('destination: ', destination)
+    cups[current] = cups[next_three[2]]
+    cups[next_three[2]] = cups[destination]
+    cups[destination] = next_three[0]
+    current = cups[current]
 
-    # Remove the next three from circle
-    for x in next_three:
-        cups.remove(x)
-
-    destidx = cups.index(destination)
-    # Place the three cups back in the circle clockwise of the destination
-    cups = cups[:destidx + 1] + next_three + cups[destidx + 1:]
-
-    if destidx < current:
-        underdesttindex = len(
-            [x for x in next_three_idxs if x > originaldestidx])
-        cups = cups[underdesttindex:] + cups[:underdesttindex]
-
-    # Set next current to the cup clockwise of current
-    current = (current + 1) % NROFCUPS
-
-# Find the 1 and build a string starting clockwise of it
-# print('-- final --')
-idx = cups.index(1)
-answer = cups[(idx + 1) % NROFCUPS] * cups[(idx + 2) % NROFCUPS]
+answer = cups[1] * cups[cups[1]]
 print(answer)
